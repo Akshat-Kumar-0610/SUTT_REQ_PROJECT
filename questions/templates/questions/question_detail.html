@@ -1,0 +1,134 @@
+
+
+{% extends "questions/base.html" %}
+{% block content %}
+    <!-- Main -->
+    <div id="main">
+        <!-- Post -->
+        
+        {% if messages %}
+        <ul class="messages">
+            {% for message in messages %}
+            <center><h1 color='red'></h1>
+            <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+                </h1>
+            </center>
+            {% endfor %}
+        </ul>
+        
+        {% endif %}<center><h1>
+        rate question 
+        <button><a href="{%url 'question_rate' question.pk%}">rate</a></button></h1></center>
+        
+            <article class="post">
+                
+                <header>
+                    <div class="title">
+                        <h2>{{object.subject}}</h2>
+                        <p>{{object.title}}</p>
+                    </div>
+                    <form action ="{%url 'report' object.id %}" method='POST'>
+                        {%csrf_token%}
+                        <button type='submit', name="post_id", value = {{object.id}} , class="btn btn-primary" > Report  </button>
+
+                    </form>
+                    {%if object.author == user%}
+                       
+                    
+                        <button>
+
+                        <a class='btn btn-secondary btn-sm mt-1 mb-1' href="{%url 'question_delete' object.id%}">Delete</a></button>
+                        <button>
+                        <a class="btn btn-danger btn-sm mt-1 mb-1" href="{%url 'question_update' object.id%}">Update</a></button>
+                        {%endif%}
+                    <div class="meta">
+                        <h1>Rating - {{object.rating}}</h1>
+                        <time class="published" datetime="2015-11-01">{{object.Date}}</time>
+                        <a href="{%url 'profile-detail' question.author.id%}" class="author"><span class="name">{{object.author}}</span><img src="{{question.author.profile.image.url}}" alt="" /></a>
+                    </div>
+                </header>
+                
+                {% if question.image_post %}
+                    <a href="{%url 'question' object.id%}" class="image featured"><img src="{{object.image_post.url}}" alt="" /></a>
+                {% endif%}
+                <p>{{object.content}}</p>
+                <footer>
+                
+                   
+                </footer>
+                <a href="{%url 'answer' object.id%}">
+                <h1>Add Answer</h1></a>
+            </article>
+
+            <div id="main">
+                {%for answer in answer%}
+                
+                    <article class="post">
+                        
+                        <header>
+                            <div class="meta">
+                                <time class="published" datetime="2015-11-01">{{answer.date_added}}</time>
+                                <a href="{%url 'profile-detail' answer.user.id%}" class="author"><span class="name">{{answer.user.username}}</span><img src="{{answer.user.profile.image.url}}" alt="" /></a>
+                            </div>
+                        </header>
+                        {% if answer.image_post %}
+                            <a href=# class="image featured"><img src="{{answer.image_post.url}}" alt="" /></a>
+                        {% endif%}
+                        <p>{{answer.body}}</p>
+
+
+                        <footer>
+                            {%if user not in answer.like.all and user not in answer.dislike.all %}
+                                <form action ='{%url 'like_post' answer.pk %}' method='POST'>
+                                    {%csrf_token%}
+                                    <button type='submit', name="post_id", value = {{answer.pk}} , class="btn btn-primary" >&#128077  </button> {{answer.like.count}} Likes
+
+                                </form>
+                                <form action ='{%url 'dislike_post' answer.pk %}' method='POST'>
+                                    {%csrf_token%}
+                                    <button type='submit', name="post_id", value = {{answer.pk}} , class="btn btn-primary" >&#128078  </button> {{answer.dislike.count}} Dislikes
+
+                                </form>
+                                
+                            {%endif%}
+                            {%if user in answer.like.all and user not in answer.dislike.all %}
+                                <form action ='{%url 'unlike_post' answer.pk %}' method='POST'>
+                                    {%csrf_token%}
+                                    <button type='submit', name="post_id", value = {{answer.pk}} , class="btn btn-primary" >&#128077  </button> {{answer.like.count}} Likes
+
+                                </form>
+                                <form action ='{%url 'dislike_post' answer.pk %}' method='POST'>
+                                    {%csrf_token%}
+                                    <button type='submit', name="post_id", value = {{answer.pk}} , class="btn btn-primary" >&#128078  </button> {{answer.dislike.count}} Dislikes
+                        
+                                </form>
+                            {%endif%}
+                            {%if user not in answer.like.all and user  in answer.dislike.all %}
+                                <form action ='{%url 'like_post' answer.pk %}' method='POST'>
+                                    {%csrf_token%}
+                                    <button type='submit', name="post_id", value = {{answer.pk}} , class="btn btn-primary" >&#128077  </button> {{answer.like.count}} Likes
+
+                                </form>
+                                <form action ='{%url 'undislike_post' answer.pk %}' method='POST'>
+                                    {%csrf_token%}
+                                    <button type='submit', name="post_id", value = {{answer.pk}} , class="btn btn-primary" >&#128078  </button> {{answer.dislike.count}} Dislikes
+                        
+                                </form>
+                            {%endif%}
+                            {%if user in answer.like.all and user in answer.dislike.all %}
+                                <form action ='{%url 'unlike_post' answer.pk %}' method='POST'>
+                                    {%csrf_token%}
+                                    <button type='submit', name="post_id", value = {{answer.pk}} , class="btn btn-primary" >&#128077  </button> {{answer.like.count}} Likes
+
+                                </form>
+                                <form action ='{%url 'undislike_post' answer.pk %}' method='POST'>
+                                    {%csrf_token%}
+                                    <button type='submit', name="post_id", value = {{answer.pk}} , class="btn btn-primary" >&#128078  </button> {{answer.dislike.count}} Dislikes
+                        
+                                </form>
+                            {%endif%}
+        
+                        </footer>
+                    </article>
+                {%endfor%}
+{%endblock content%}

@@ -1,0 +1,133 @@
+{% load static %}
+{% load socialaccount %}
+<!DOCTYPE HTML>
+<!--
+	Future Imperfect by HTML5 UP
+	html5up.net | @ajlkn
+	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
+-->
+<html>
+	<head>
+		
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+		<link rel="stylesheet" href="{% static 'questions/assets/css/main.css' %}" />
+        {% if title %}
+            <title>BITSassist- {{ title }}</title>
+        {% else %}
+            <title>BITSassist</title>
+        {% endif %}
+	</head>
+	<body class="is-preload">
+        
+        {% if user.is_authenticated %}
+            <!-- Wrapper -->
+                <div id="wrapper">
+
+                    <!-- Header -->
+                        <header id="header">
+                            <h1><a href="{%url 'home'%}">BITS Assist</a></h1>
+                            <nav class="links">
+                                <ul>
+
+                                    <li><a href="{%url 'home'%}">Home</a></li>
+                                    <li><a href="{%url 'profile-detail' user.id%}">My Profile</a></li>
+                                    <li><a href="{%url 'question_create'%}">Post Question</a></li>
+                                    <li><a href="{%url 'profile_edit'%}">Edit Profile</a></li>
+                                    <li><a href='{%url 'logout' %}'>Logout</a></li>
+                                </ul>
+                            </nav>
+                            <nav class="main">
+                                <ul>
+                                    <li class="search">
+                                        <a class="fa-search" href="#search">Search</a>
+                                        <form id="search" method="get" action="#">
+                                            <input type="text" name="query" placeholder="Search" />
+                                        </form>
+                                    </li>
+                                    <li class="menu">
+                                        <a class="fa-bars" href="#menu">Menu</a>
+                                    </li>
+                                </ul>
+                            </nav>
+                        </header>
+                        
+                    {%if user.profile.ban  %}
+                        <div ='title'>
+                        <center><h2>You have been banned by admin</h2></center></div>
+                    {%else%}
+
+                            <!-- Main -->
+                                <div id="main">
+                                    {%for question in question%}
+
+                                    <!-- Post -->
+                                        <article class="post">
+                                            <header>
+                                                <div class="title">
+                                                    <h2>{{question.subject}}</h2>
+                                                    <p>{{question.title}}</p>
+                                                </div>
+                                                <div class="meta">
+                                                    <h1>Rating - {{question.rating}}</h1>
+                                                    <time class="published" datetime="2015-11-01">{{question.Date}}</time>
+                                                    <a href="{%url 'profile-detail' question.author.id%}" class="author"><span class="name">{{question.author}}</span><img src="{{question.author.profile.image.url}}" alt="" /></a>
+                                                </div>
+                                            </header>
+                                            {% if question.image_post %}
+                                            <a href="{%url 'question' question.id%}" class="image featured"><img src="{{question.image_post.url}}" alt="" /></a>
+                                            {%endif%}
+                                            <p>{{question.content}}</p>
+                                            <footer>
+                                                <ul class="actions">
+                                                    <li><a href="{%url 'question' question.id%}" class="button large">Continue Reading</a></li>
+                                                </ul>
+                                                
+                                            </footer>
+                                        </article>
+                                    {%endfor%}
+
+
+                                
+                                    <!-- Pagination 
+                                        <ul class="actions pagination">
+                                            <li><a href="" class="disabled button large previous">Previous Page</a></li>
+                                            <li><a href="#" class="button large next">Next Page</a></li>
+                                        </ul>-->
+
+                                </div>
+
+                                </section>
+                    {%endif%}
+                </div>
+
+            <!-- Scripts -->
+                <script src="{%static 'questions/assets/js/jquery.min.js'%}"></script>
+                <script src="{%static 'questions/assets/js/browser.min.js'%}"></script>
+                <script src="{%static 'questions/assets/js/breakpoints.min.js'%}"></script>
+                <script src="{%static 'questions/assets/js/utils.js'%}"></script>
+                <script src="{%static 'questions/assets/js/main.js'%}"></script>
+
+        
+        {%else%}
+            <div class='title'>
+                <center>
+                    <h2>
+                        <a href="{% provider_login_url 'google' %}">Login With BITS Mail</a>
+                    </h2>
+                </center>
+            </div>
+        {%endif%}
+        <!-- Footer -->
+        <center>
+        <section id="footer">
+            <ul class="icons">
+                <li><a href="#" class="icon brands fa-twitter"><span class="label">Twitter</span></a></li>
+                <li><a href="#" class="icon brands fa-facebook-f"><span class="label">Facebook</span></a></li>
+                <li><a href="#" class="icon brands fa-instagram"><span class="label">Instagram</span></a></li>
+                <li><a href="#" class="icon solid fa-envelope"><span class="label">Email</span></a></li>
+            </ul>
+        </section>
+        </center>
+	</body>
+</html>

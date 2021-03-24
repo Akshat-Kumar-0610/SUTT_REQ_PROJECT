@@ -1,0 +1,43 @@
+{% extends "questions/base.html" %}
+{% block content %}
+    <h1 class="display-4">{{profile_v.user}}</h1>
+    <div>
+        <img class='rounded-circle article-img' src="{{profile_v.image.url}}">
+        <h2 >About:</h2>
+        <p class="h4">{{profile_v.bio}}</p>
+
+    </div>
+    
+    <h2>Questions by {{profile_v.user}}</h2>
+
+
+    <!-- Main -->
+    <div id="main">
+        {%for question in question%}
+
+        <!-- Post -->
+            <article class="post">
+                <header>
+                    <div class="title">
+                        <h2>{{question.subject}}</h2>
+                        <p>{{question.title}}</p>
+                    </div>
+                    <div class="meta">
+         
+                        <time class="published" datetime="2015-11-01">{{question.Date}}</time>
+                        <a href="{%url 'profile-detail' question.author.id%}" class="author"><span class="name">{{question.author}}</span><img src="{{question.author.profile.image.url}}" alt="" /></a>
+                    </div>
+                </header>
+                {% if question.image_post %}
+                <a href="{%url 'question' question.id%}" class="image featured"><img src="{{question.image_post.url}}" alt="" /></a>
+                {%endif%}
+                <p>{{question.content}}</p>
+                <footer>
+                    <ul class="actions">
+                        <li><a href="{%url 'question' question.id%}" class="button large">Continue Reading</a></li>
+                    </ul>
+        
+                </footer>
+            </article>
+        {%endfor%}
+{%endblock content%}
